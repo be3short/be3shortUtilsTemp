@@ -59,7 +59,7 @@ public enum DataFormat implements FileFormatProperties<DataFormat> {
 	/**
 	 * GZIP file extension
 	 */
-	GZIP("Hybrid systems environment", ".gzip"),
+	GZIP("gzip", ".gzip"),
 
 	/**
 	 * XML file extension

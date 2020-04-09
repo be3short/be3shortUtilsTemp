@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import com.be3short.util.io.StringCompiler;
 import com.be3short.util.io.XMLParser;
+import com.be3short.util.reflection.FieldFinder;
 
 public class FieldMapping {
 
@@ -151,10 +152,17 @@ public class FieldMapping {
 					if (!mapper.containsKey(field.getName())) {
 						mapper.put(field.getName(), field);
 					}
-					if (!field.getType().getName().substring(0, 4).contains("java") && !field.getType().isPrimitive()) {
-						// if (scanClasses.contains(field.getType())) {
-
+					String name = field.getType().getName();
+					System.out.println(name);
+					if (field.getType().getName().length() < 4) {
 						mapClass(field.getType());
+					} else {
+						if (!field.getType().getName().substring(0, 4).contains("java")
+								&& !field.getType().isPrimitive()) {
+							// if (scanClasses.contains(field.getType())) {
+
+							mapClass(field.getType());
+						}
 					}
 				}
 			}
@@ -172,6 +180,9 @@ public class FieldMapping {
 			while (search != Object.class) {
 				mapClass(search);
 				loadClassFieldMap(search, map);
+				if (search.getSuperclass() == null) {
+					break;
+				}
 				search = search.getSuperclass();
 			}
 		} else {
@@ -194,6 +205,8 @@ public class FieldMapping {
 	public boolean validField(Field field, Object object) {
 
 		Map<String, Field> map = getClassFieldMap(object.getClass());
+		log.debug("valid field " + field + " for " + object + " = " + map.containsValue(field));
+
 		return map.containsValue(field);
 	}
 
