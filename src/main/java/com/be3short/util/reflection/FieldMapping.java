@@ -153,7 +153,8 @@ public class FieldMapping {
 						mapper.put(field.getName(), field);
 					}
 					String name = field.getType().getName();
-					System.out.println(name);
+					// XMLParser.print(name);
+					// System.out.println(name);
 					if (field.getType().getName().length() < 4) {
 						mapClass(field.getType());
 					} else {

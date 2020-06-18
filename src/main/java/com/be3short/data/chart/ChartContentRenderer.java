@@ -119,6 +119,7 @@ import org.jfree.util.PublicCloneable;
 import org.jfree.util.ShapeUtilities;
 
 import com.be3short.data.store.DataSeries;
+import com.be3short.util.io.XMLParser;
 
 /**
  * A renderer that connects data points with lines and/or draws shapes at each
@@ -1104,7 +1105,7 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 		ArrayList<String> sortedSeriesNames = new ArrayList<String>(chartData.getData().getSeriesMap().keySet());
 		Collections.sort(sortedSeriesNames);
 		for (String seriesName : sortedSeriesNames) {
-			System.out.println(seriesName);
+			// System.out.println(seriesName);
 
 			DataSeries series = chartData.getData().getSeries(seriesName);
 			Paint paint = series.get(Chart.SERIES_COLOR);
@@ -1115,7 +1116,7 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 			if (stroke == null) {
 				stroke = chartData.get(Chart.DEFAULT_FLOW_STROKE);
 			}
-			System.out.println(paint.toString() + " " + stroke.toString());
+			// System.out.println(paint.toString() + " " + stroke.toString());
 			this.setSeriesPaint(i, paint);
 			this.setSeriesFillPaint(i, paint);
 			this.setSeriesStroke(i, stroke);

@@ -155,7 +155,7 @@ public class BaseDataSet extends DynamicFieldObject implements DataSet {
 		List<DataSeries> series = this.getSeriesList();
 		List<Object> domain = this.getDomain();
 		int DomainWidth = getDomainWidth(this);
-		System.out.println(series.toString());
+		// System.out.println(series.toString());
 		Object[][] output = new Object[domain.size() + 1][series.size() + DomainWidth];
 		output[0] = getHeaderValue(this);
 		Object[] previousValues = getInitialValues(this);
@@ -166,9 +166,9 @@ public class BaseDataSet extends DynamicFieldObject implements DataSet {
 			int sCount = 0;
 			for (DataSeries ser : series) {
 				Object datVal = ser.getYValue(domainPoint);
-				System.out.println(ser.getLabel());
-				XMLParser.print(currentValues);
-				System.out.println(datVal + " " + domainPoint);
+				// System.out.println(ser.getLabel());
+				// XMLParser.print(currentValues);
+				// System.out.println(datVal + " " + domainPoint);
 				if (datVal == null) {
 					datVal = previousValues[sCount];
 				} else {

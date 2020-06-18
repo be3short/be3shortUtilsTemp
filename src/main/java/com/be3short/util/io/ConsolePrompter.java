@@ -44,4 +44,17 @@ public class ConsolePrompter {
 		reader = new BufferedReader(new InputStreamReader(System.in));
 
 	}
+
+	public static String getResponse(String intro, String prompt, String terminator) {
+
+		String response = null;
+		if (intro != null) {
+			System.out.println(intro);
+		}
+		String input = getPromptedResponse(prompt);
+		if (!input.equals(terminator)) {
+			response = input;
+		}
+		return response;
+	}
 }

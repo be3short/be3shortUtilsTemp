@@ -13,6 +13,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import com.be3short.util.io.PropertyScanner;
+import com.be3short.util.reflection.FieldMapping;
 
 public class FieldFinder {
 
@@ -213,6 +214,34 @@ public class FieldFinder {
 			}
 		}
 		return fieldMatch;
+	}
+
+	/*
+	 * Gets the field of an object
+	 * 
+	 * @param object - Object to gather fields from
+	 * 
+	 * @param include_private - Flag to include private fields
+	 * 
+	 * @param - class_filter - Desired field classes to search for - all other
+	 * classes filtered
+	 * 
+	 * @return Mapping of fields indexed by field name
+	 */
+	public static Field getClassFieldByName(Class<?> object, String name) {
+
+		ArrayList<Field> fields = getClassFields(object, true, true);
+
+		for (Field field : fields) // iterate through fields
+		{
+
+			if (field.getName().equals(name)) {
+				return field;
+			}
+
+		}
+		return null;
+
 	}
 
 	/*

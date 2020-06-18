@@ -64,7 +64,7 @@ public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 	public DataSeries setLabel(String label) {
 
 		this.label = label;
-		System.out.println("setting label of " + this.toString() + " to " + label);
+		// System.out.println("setting label of " + this.toString() + " to " + label);
 		return this;
 	}
 

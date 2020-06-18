@@ -49,13 +49,11 @@ task(runApp, dependsOn: 'classes', type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 jar {
-  	manifest { 
-	attributes "Main-Class": 'a.a.dev.ScriptingApplicationExample'
-  }  
+     
 
   from {
     configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
   }
-    baseName 'JHEQ'
+    baseName 'be3shortUtils'
   
 }
