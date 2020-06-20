@@ -544,7 +544,7 @@ public class FigurePane extends DynamicFieldObject implements Figure {
 		});
 
 		// displayFrame.getContentPane().setPreferredSize(contentPanel.getPreferredSize());
-
+		// displayFrame.setSize(rootPanel.getPreferredSize());
 		displayFrame.pack();
 
 		// displayFrame.setResizable(true);
