@@ -3,14 +3,87 @@ package com.be3short.util.io;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import com.thoughtworks.xstream.XStream;
 
 public class XMLParser {
 
+	public static Logger log = Logger.getLogger(XMLParser.class);
+
 	private static ArrayList<String> ownClassFilter = getOwnPackageFilter();
 
 	public static XStream xstream = new XStream();
+
+	public static String getTraceObj(Object obj) {
+
+		return getLogObj(obj, Level.TRACE_INT);
+
+	}
+
+	public static String getWarnObj(Object obj) {
+
+		return getLogObj(obj, Level.WARN_INT);
+
+	}
+
+	public static String getDebugObj(Object obj) {
+
+		return getLogObj(obj, Level.DEBUG_INT);
+
+	}
+
+	// public static List<Level> getAcceptable(Level level) {
+	//
+	// Level[] levels = new Level[]
+	// { Level.FATAL, Level.ERROR, Level.WARN, Level.INFO, Level.DEBUG };
+	// ArrayList<Level> acc = new ArrayList<Level>();
+	// for (Level lev : levels) {
+	// if (repository.isDisabled(Level.ERROR_INT)) {
+	// if (Logger.getRootLogger().getEffectiveLevel()
+	// .isGreaterOrEqual(Logger.getRootLogger().getEffectiveLevel())) {
+	// acc.add(lev);
+	// }
+	// }
+	// }
+	// if (Logger.getRootLogger().isTraceEnabled()) {
+	// acc.clear();
+	// acc.addAll(Arrays.asList(levels));
+	// acc.add(Level.TRACE);
+	// }
+	// return acc;
+	// }
+
+	public static String getErrorObj(Object obj) {
+
+		return getLogObj(obj, Level.ERROR_INT);
+
+	}
+
+	public static String getInfoObj(Object obj) {
+
+		return getLogObj(obj, Level.INFO_INT);
+
+	}
+
+	public static String getLogObj(Object obj, int level) {
+
+		String returnString = null;
+		if (Logger.getRootLogger().getEffectiveLevel().toInt() <= level) {
+
+			returnString = serializeObject(obj);
+
+		} else {
+			returnString = "";
+		}
+		return returnString;
+
+	}
 
 	public static String serializeObject(Object obj) {
 

@@ -65,6 +65,8 @@ import com.be3short.util.io.FileBrowser;
  */
 public class FigurePane extends DynamicFieldObject implements Figure {
 
+	public static long exportDelay = 2000;
+
 	private static Logger log = Logger.getLogger(FigurePane.class);
 
 	/**
@@ -297,8 +299,16 @@ public class FigurePane extends DynamicFieldObject implements Figure {
 			if (!displayFrame.isVisible()) {
 				displayFrame.setResizable(false);
 				display();
+
+			}
+
+			try {
+				Thread.currentThread().sleep(exportDelay);
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
 			}
 			FigureExporter.exportToFile(location, this, format);
+
 			displayFrame.dispatchEvent(new WindowEvent(displayFrame, WindowEvent.WINDOW_CLOSING));
 		}
 		return success;
@@ -491,6 +501,8 @@ public class FigurePane extends DynamicFieldObject implements Figure {
 	@Override
 	public boolean export(File destination, GraphicFormat format) {
 
+		// display();
+
 		boolean success = false;
 		if (destination == null) {
 			log.error("null file location provided, unable to export figure");
@@ -501,7 +513,13 @@ public class FigurePane extends DynamicFieldObject implements Figure {
 			if (!displayFrame.isVisible()) {
 				display();
 			}
+			try {
+				Thread.currentThread().sleep(exportDelay);
+			} catch (InterruptedException ie) {
+				ie.printStackTrace();
+			}
 			FigureExporter.exportToFile(destination, this, format);
+
 			displayFrame.dispatchEvent(new WindowEvent(displayFrame, WindowEvent.WINDOW_CLOSING));
 		}
 		return success;
@@ -526,6 +544,7 @@ public class FigurePane extends DynamicFieldObject implements Figure {
 		});
 
 		// displayFrame.getContentPane().setPreferredSize(contentPanel.getPreferredSize());
+
 		displayFrame.pack();
 
 		// displayFrame.setResizable(true);
