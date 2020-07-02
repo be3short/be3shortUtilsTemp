@@ -32,26 +32,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.be3short.data.chart.SeriesPointData;
+
 public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 
 	private String label;
 
-	private LinkedHashMap<Object, Object> data;
+	private List<Object> xValues;
+
+	private List<Object> yValues;
+
+	private ArrayList<Integer> timeDomain;
 
 	public BaseDataSeries() {
 
-		this("Series", new LinkedHashMap<Object, Object>());
+		this("Series", new ArrayList<Object>(), new ArrayList<Object>());
 	}
 
 	public BaseDataSeries(String label) {
 
-		this(label, new LinkedHashMap<Object, Object>());
+		this(label, new ArrayList<Object>(), new ArrayList<Object>());
 	}
 
-	public BaseDataSeries(String label, Map<Object, Object> data) {
+	public BaseDataSeries(String label, ArrayList<Object> x, ArrayList<Object> y) {
 
 		setLabel(label);
-		addData(data);
+		xValues = x;
+		yValues = y;
 	}
 
 	@Override
@@ -69,42 +76,45 @@ public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 	}
 
 	@Override
-	public Map<Object, Object> getDataMap() {
-
-		return data;
-	}
-
-	@Override
 	public List<Object> getXValues() {
 
-		return new ArrayList<Object>(data.keySet());
+		return xValues;
 	}
 
 	@Override
 	public List<Object> getYValues() {
 
-		return new ArrayList<Object>(data.values());
+		return yValues;
 
 	}
 
 	@Override
-	public DataSeries addData(Map<Object, Object> data) {
+	public DataSeries addDataSet(ArrayList<Object> x, ArrayList<Object> y) {
 
-		if (this.data == null) {
-			this.data = new LinkedHashMap<Object, Object>();
-		}
 		// this.data.clear();
-		for (Object x : data.keySet()) {
-			this.data.put(x, data.get(x));
+		for (Object xv : x) {
+			xValues.add(xv);
+		}
+		for (Object yv : y) {
+			xValues.add(yv);
 		}
 		return this;
 	}
 
 	@Override
+	public DataSeries setDataSet(ArrayList<Object> x, ArrayList<Object> y) {
+
+		xValues.clear();
+		yValues.clear();
+		return addDataSet(x, y);
+	}
+
+	@Override
 	public Object getYValue(Object domain_value) {
 
-		if (data.containsKey(domain_value)) {
-			return data.get(domain_value);
+		Integer ind = xValues.indexOf(domain_value);
+		if (ind > 0) {
+			return yValues.get(ind);
 		}
 		return null;
 
@@ -113,17 +123,22 @@ public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 	@Override
 	public DataSeries addData(Object x, Object y) {
 
-		data.put(x, y);
+		xValues.add(x);
+		yValues.add(y);
 		return this;
 	}
 
 	@Override
 	public Object removeData(Object x) {
 
-		if (data.containsKey(x)) {
-			return data.remove(x);
+		Object v = null;
+		Integer ind = xValues.indexOf(x);
+		if (ind > 0) {
+			v = yValues.get(ind);
+			yValues.remove(ind);
+			xValues.remove(ind);
 		}
-		return null;
+		return v;
 	}
 
 	@Override
@@ -131,6 +146,33 @@ public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 
 		XYDataSeries<W, Z> newSeries = (XYDataSeries<W, Z>) this;
 		return newSeries;
+	}
+
+	@Override
+	public ArrayList<Integer> setJumpDomain(ArrayList<Integer> times) {
+
+		timeDomain = times;
+		return timeDomain;
+	}
+
+	@Override
+	public ArrayList<Integer> getJumpDomain() {
+
+		// TODO Auto-generated method stub
+		return timeDomain;
+	}
+
+	@Override
+	public Map<SeriesPointData<Object>, Object> getDataMap() {
+
+		Map<SeriesPointData<Object>, Object> map = new LinkedHashMap<SeriesPointData<Object>, Object>();
+		for (int i = 0; i < xValues.size(); i++) {
+			Object y = yValues.get(i);
+			Object x = xValues.get(i);
+			map.put(new SeriesPointData<Object>(x), y);
+		}
+		// TODO Auto-generated method stub
+		return map;
 	}
 
 }

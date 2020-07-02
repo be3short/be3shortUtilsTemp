@@ -10,12 +10,13 @@ import java.util.Map;
 
 import com.be3short.util.io.FileParser;
 import com.be3short.util.io.ObjectEvaluator;
-import com.be3short.util.io.XMLParser;
 import com.be3short.util.var.Null;
 
 public class BaseDataSet extends DynamicFieldObject implements DataSet {
 
 	private ArrayList<DataSeries> seriesList;
+
+	private Map<DataSeries, ArrayList<Double>> timeDomain;
 
 	private String domainLabel;
 
@@ -23,6 +24,7 @@ public class BaseDataSet extends DynamicFieldObject implements DataSet {
 
 		domainLabel = DataSet.defaultDomainName;
 		seriesList = new ArrayList<DataSeries>();
+		timeDomain = new LinkedHashMap<DataSeries, ArrayList<Double>>();
 		addSeries(new_series);
 	}
 
@@ -257,6 +259,23 @@ public class BaseDataSet extends DynamicFieldObject implements DataSet {
 			}
 		}
 		return datasets;
+	}
+
+	@Override
+	public ArrayList<Integer> setJumpDomain(DataSeries series, ArrayList<Integer> times) {
+
+		series.setJumpDomain(times);
+		return times;
+	}
+
+	@Override
+	public ArrayList<Integer> getJumpDomain(DataSeries series) {
+
+		ArrayList<Integer> dom = null;
+		if (series.getJumpDomain() != null) {
+			dom = series.getJumpDomain();
+		}
+		return dom;
 	}
 
 }

@@ -20,6 +20,7 @@ import com.be3short.data.graphics.Graphic;
 import com.be3short.data.store.DataSeries;
 import com.be3short.data.store.DataSet;
 import com.be3short.util.io.ObjectEvaluator;
+import com.be3short.util.reflection.FieldFinder;
 
 public interface Chart extends Graphic {
 
@@ -157,30 +158,141 @@ public interface Chart extends Graphic {
 
 	public static XYSeriesCollection buildXYSeriesCollection(DataSet data) {
 
-		XYSeriesCollection seriesCollection = new XYSeriesCollection();
+		XYSeriesCollectionMultiDomain seriesCollection = new XYSeriesCollectionMultiDomain();
 		ArrayList<String> sortedSeriesNames = new ArrayList<String>(data.getSeriesMap().keySet());
 		Collections.sort(sortedSeriesNames);
 		for (String seriesName : sortedSeriesNames) {
 			DataSeries chartSeries = data.getSeries(seriesName);
 			XYSeries newSeries = new XYSeries(seriesName, false, true);
 			newSeries.setDescription(seriesName);
-			for (Object xValueObj : chartSeries.getXValues()) {
-				if (ObjectEvaluator.isNumericalValue(xValueObj)) {
-					Double xValue = ObjectEvaluator.getDoubleValue(xValueObj);
-					Object yValueObj = chartSeries.getYValue(xValueObj);
-					if (ObjectEvaluator.isNumericalValue(yValueObj)) {
-						Double yValue = ObjectEvaluator.getDoubleValue(yValueObj);
+			List<Object> xValList = chartSeries.getXValues();
+			List<Object> yValList = chartSeries.getYValues();
+			for (int i = 0; i < xValList.size(); i++) {
+				Object xv = xValList.get(i);
+				Object yv = yValList.get(i);
+				if (ObjectEvaluator.isNumericalValue(xv)) {
+					Double xValue = ObjectEvaluator.getDoubleValue(xv);
+
+					if (ObjectEvaluator.isNumericalValue(yv)) {
+						Double yValue = ObjectEvaluator.getDoubleValue(yv);
 
 						newSeries.add(xValue, yValue);
 					}
+
 				}
 			}
 			if (newSeries.getItemCount() > 0) {
-				seriesCollection.addSeries(newSeries);
+				seriesCollection.addSeries(newSeries, data.getJumpDomain(chartSeries));
 			}
 
 		}
 
 		return seriesCollection;
 	}
+
+	public static XYSeriesCollection buildXYSeriesCollectionPoints(DataSet data) {
+
+		XYSeriesCollectionMultiDomain seriesCollection = new XYSeriesCollectionMultiDomain();
+		ArrayList<String> sortedSeriesNames = new ArrayList<String>(data.getSeriesMap().keySet());
+		Collections.sort(sortedSeriesNames);
+		for (String seriesName : sortedSeriesNames) {
+			DataSeries chartSeries = data.getSeries(seriesName);
+			XYSeries newSeries = new XYSeries(seriesName, false, true);
+			newSeries.setDescription(seriesName);
+			List<Double> xValList = getTrueXValues(chartSeries);
+			for (Object xValueObj : xValList) {
+				Object xv = xValueObj;
+				Object yValueObj = chartSeries.getYValue(xValueObj);
+				if (xValueObj.getClass().equals(SeriesPointData.class)) {
+					SeriesPointData sp = (SeriesPointData) xValueObj;
+					xv = sp.getData();
+				}
+				Object yv = yValueObj;
+				if (yValueObj.getClass().equals(SeriesPointData.class)) {
+					SeriesPointData sp = (SeriesPointData) yValueObj;
+					yv = sp.getData();
+				}
+
+				if (ObjectEvaluator.isNumericalValue(xv)) {
+					Double xValue = ObjectEvaluator.getDoubleValue(xv);
+
+					if (ObjectEvaluator.isNumericalValue(yv)) {
+						Double yValue = ObjectEvaluator.getDoubleValue(yv);
+
+						newSeries.add(xValue, yValue);
+					}
+
+				}
+			}
+			if (newSeries.getItemCount() > 0) {
+				seriesCollection.addSeries(newSeries, data.getJumpDomain(chartSeries));
+			}
+
+		}
+
+		return seriesCollection;
+	}
+
+	public static XYSeriesCollection buildXYSeriesCollectionOld(DataSet data) {
+
+		XYSeriesCollectionMultiDomain seriesCollection = new XYSeriesCollectionMultiDomain();
+		ArrayList<String> sortedSeriesNames = new ArrayList<String>(data.getSeriesMap().keySet());
+		Collections.sort(sortedSeriesNames);
+		for (String seriesName : sortedSeriesNames) {
+			DataSeries chartSeries = data.getSeries(seriesName);
+			XYSeries newSeries = new XYSeries(seriesName, false, true);
+			newSeries.setDescription(seriesName);
+			List<Double> xValList = getTrueXValues(chartSeries);
+			for (Object xValueObj : xValList) {
+				if (ObjectEvaluator.isNumericalValue(xValueObj)) {
+					Double xValue = ObjectEvaluator.getDoubleValue(xValueObj);
+					Object yValueObj = chartSeries.getYValue(xValueObj);
+					if (FieldFinder.containsSuper(yValueObj, List.class)) {
+						System.out.println("list");
+						for (Object yListObj : ((List) yValueObj)) {
+							Double yValue = ObjectEvaluator.getDoubleValue(yListObj);
+							newSeries.add(xValue, yValue);
+						}
+					} else {
+						if (ObjectEvaluator.isNumericalValue(yValueObj)) {
+							Double yValue = ObjectEvaluator.getDoubleValue(yValueObj);
+
+							newSeries.add(xValue, yValue);
+						}
+					}
+				}
+			}
+			if (newSeries.getItemCount() > 0) {
+				seriesCollection.addSeries(newSeries, data.getJumpDomain(chartSeries));
+			}
+
+		}
+
+		return seriesCollection;
+	}
+
+	public static List<Double> getTrueXValues(DataSeries ds) {
+
+		List<Double> xVals = new ArrayList<Double>();
+		for (Object xValueObj : ds.getXValues()) {
+			if (FieldFinder.containsSuper(xValueObj, List.class)) {
+				System.out.println("list");
+				for (Object xListObj : ((List) xValueObj)) {
+					Double xValue = ObjectEvaluator.getDoubleValue(xListObj);
+					xVals.add(xValue);
+				}
+			} else {
+				if (ObjectEvaluator.isNumericalValue(xValueObj)) {
+					Double xValue = ObjectEvaluator.getDoubleValue(xValueObj);
+
+					xVals.add(xValue);
+				}
+			}
+		}
+		return xVals;
+	}
+
+	public ArrayList<Double> setTimeDomain(ArrayList<Double> times);
+
+	public ArrayList<Double> getTimeDomain();
 }

@@ -1,8 +1,11 @@
 
 package com.be3short.data.store;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.be3short.data.chart.SeriesPointData;
 
 /**
  * a generalized data set
@@ -36,7 +39,7 @@ public interface XYDataSeries<X, Y> extends DynamicFields {
 	 * 
 	 * @return data map
 	 */
-	public Map<X, Y> getDataMap();
+	public Map<SeriesPointData<X>, Y> getDataMap();
 
 	/**
 	 * get the domain values of the data set
@@ -59,7 +62,9 @@ public interface XYDataSeries<X, Y> extends DynamicFields {
 	 *            map with new data
 	 * @return the data set object
 	 */
-	public XYDataSeries<X, Y> addData(Map<X, Y> data);
+	public XYDataSeries<X, Y> addDataSet(ArrayList<Object> x, ArrayList<Object> y);
+
+	public XYDataSeries<X, Y> setDataSet(ArrayList<Object> x, ArrayList<Object> y);
 
 	/**
 	 * get the y value corresponding to the specified x value

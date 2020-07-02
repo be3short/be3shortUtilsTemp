@@ -1,7 +1,7 @@
 
 package com.be3short.data.store;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public class DataSeriesFactory {
 
@@ -20,9 +20,9 @@ public class DataSeriesFactory {
 		}
 
 		@Override
-		public DataSeries create(String label, Map<Object, Object> data) {
+		public DataSeries create(String label, ArrayList<Object> x, ArrayList<Object> y) {
 
-			return new BaseDataSeries(label, data);
+			return new BaseDataSeries(label, x, y);
 		}
 	};
 
@@ -37,9 +37,9 @@ public class DataSeriesFactory {
 
 	}
 
-	public static DataSeries create(String label, Map<Object, Object> data) {
+	public static DataSeries create(String label, ArrayList<Object> x, ArrayList<Object> y) {
 
-		return factory.create(label, data);
+		return factory.create(label, x, y);
 
 	}
 }

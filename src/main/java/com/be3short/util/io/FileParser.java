@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import com.be3short.data.store.DataSet;
 import com.be3short.io.general.FileSystemInteractor;
-import com.be3short.obj.modification.XMLParser;
 
 public class FileParser {
 

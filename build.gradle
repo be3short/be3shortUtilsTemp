@@ -39,9 +39,20 @@ dependencies {
     compile 'org.jgrapht:jgrapht-core:1.0.1'
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.28'
     
+    
+    compile 'org.reflections:reflections:0.9.11'
+    compile 'com.thoughtworks.xstream:xstream:1.4.9'
+    compile 'com.github.kostaskougios:cloning:1.7.9'
+    compile group: 'com.esotericsoftware', name: 'kryo', version: '4.0.0'
+
+ 	compile 'org.slf4j:slf4j-api:1.7.21'
+	compile 'com.google.guava:guava:20.0'
+	compile group: 'com.carrotsearch', name: 'java-sizeof', version: '0.0.5'
+	compile 'com.github.ronmamo:reflections:-SNAPSHOT'
+
     // Utilities
-    compile 'com.github.be3short:ObjectTools:-SNAPSHOT'
-  
+//    compile 'com.github.be3short:ObjectTools:master-SNAPSHOT'
+    //compile 'com.github.be3short:MediaPlus:master-SNAPSHOT'
 
 }
 task(runApp, dependsOn: 'classes', type: JavaExec) {

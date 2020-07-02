@@ -96,6 +96,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import org.jfree.chart.LegendItem;
@@ -119,7 +120,7 @@ import org.jfree.util.PublicCloneable;
 import org.jfree.util.ShapeUtilities;
 
 import com.be3short.data.store.DataSeries;
-import com.be3short.util.io.XMLParser;
+import com.be3short.util.reflection.FieldFinder;
 
 /**
  * A renderer that connects data points with lines and/or draws shapes at each
@@ -133,6 +134,12 @@ import com.be3short.util.io.XMLParser;
  */
 public class ChartContentRenderer extends AbstractXYItemRenderer
 		implements XYItemRenderer, Cloneable, PublicCloneable, Serializable {
+
+	public static final String JUMP_OCCURRING_ALT_DOMAIN = "JUMP_OCCURRING_ALT_DOMAIN";
+
+	public static final String JUMP_NOT_OCCURRING_ALT_DOMAIN = "JUMP_NOT_OCCURRING_ALT_DOMAIN";
+
+	public static final String NO_ALT_DOMAIN = "NO_ALT_DOMAIN";
 
 	/** The default value returned by the getLinesVisible() method. */
 	private boolean baseLinesVisible;
@@ -1166,6 +1173,18 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 		g2.draw(shape);
 	}
 
+	protected XYSeriesCollectionMultiDomain checkExtraDomain(XYDataset dataset) {
+
+		if (!multiDomain.containsKey(dataset)) {
+			XYSeriesCollectionMultiDomain d = new XYSeriesCollectionMultiDomain();
+			if (FieldFinder.containsSuper(dataset, XYSeriesCollectionMultiDomain.class)) {
+				d = (XYSeriesCollectionMultiDomain) dataset;
+			}
+			multiDomain.put(dataset, d);
+		}
+		return multiDomain.get(dataset);
+	}
+
 	/**
 	 * Draws the item (first pass). This method draws the lines connecting the
 	 * items.
@@ -1211,14 +1230,23 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 			return;
 		}
 		try {
-
-			if (x1 != x0) {
-				g2.setStroke(this.getSeriesStroke(series));
-
-			} else {
-
+			System.out.println("item= " + item + " x0=" + x0 + " x1=" + x1 + " y0=" + y0 + " y1=" + y1);
+			String extraDomainJump = checkExtraDomain(dataset).jumpOccurring(series, item, x0, y0, x1, y1);
+			// if ((x1 != x0) && (extraDomainJump)) {
+			// g2.setStroke(this.getSeriesStroke(series));
+			//
+			// } else {
+			//
+			// Stroke stroke1 = chartData.get(Chart.DEFAULT_JUMP_STROKE);
+			// g2.setStroke(stroke1);
+			// }
+			if (((x1 == x0) && (extraDomainJump.equals(NO_ALT_DOMAIN))
+					|| extraDomainJump.equals(JUMP_OCCURRING_ALT_DOMAIN))) {
 				Stroke stroke1 = chartData.get(Chart.DEFAULT_JUMP_STROKE);
 				g2.setStroke(stroke1);
+			} else {
+
+				g2.setStroke(this.getSeriesStroke(series));
 			}
 			RectangleEdge xAxisLocation = plot.getDomainAxisEdge();
 			RectangleEdge yAxisLocation = plot.getRangeAxisEdge();
@@ -1503,6 +1531,8 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 		this.baseLinesVisible = ChartRenderData.getRenderType(chartData.get(Chart.TYPE).toString()).getRenderLines();
 		this.baseShapesVisible = ChartRenderData.getRenderType(chartData.get(Chart.TYPE).toString()).getRenderShapes();
 	}
+
+	public HashMap<XYDataset, XYSeriesCollectionMultiDomain> multiDomain = new HashMap<XYDataset, XYSeriesCollectionMultiDomain>();
 
 	/**
 	 * Records the state for the renderer. This is used to preserve state

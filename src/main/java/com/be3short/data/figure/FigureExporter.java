@@ -57,7 +57,7 @@ import org.apache.xmlgraphics.java2d.ps.EPSDocumentGraphics2D;
 import org.jfree.graphics2d.svg.SVGGraphics2D;
 
 import com.be3short.data.graphics.GraphicFormat;
-import com.be3short.obj.modification.XMLParser;
+import com.be3short.util.io.XMLParser;
 
 /**
  * A set of utilities for performing the steps necessary to export a figure in

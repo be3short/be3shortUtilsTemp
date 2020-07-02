@@ -1,7 +1,7 @@
 
 package com.be3short.data.store;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public interface IDataSeriesFactory {
 
@@ -9,6 +9,6 @@ public interface IDataSeriesFactory {
 
 	public DataSeries create(String label);
 
-	public DataSeries create(String label, Map<Object, Object> data);
+	public DataSeries create(String label, ArrayList<Object> x, ArrayList<Object> y);
 
 }

@@ -1,7 +1,7 @@
 
 package com.be3short.data.store;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 public interface DataSeries extends XYDataSeries<Object, Object> {
 
@@ -13,8 +13,15 @@ public interface DataSeries extends XYDataSeries<Object, Object> {
 	public DataSeries setLabel(String label);
 
 	@Override
-	public DataSeries addData(Map<Object, Object> data);
+	public DataSeries addDataSet(ArrayList<Object> x, ArrayList<Object> y);
+
+	@Override
+	public DataSeries setDataSet(ArrayList<Object> x, ArrayList<Object> y);
 
 	@Override
 	public DataSeries addData(Object x, Object y);
+
+	public ArrayList<Integer> setJumpDomain(ArrayList<Integer> times);
+
+	public ArrayList<Integer> getJumpDomain();
 }

@@ -5,6 +5,7 @@ import java.awt.BasicStroke;
 import java.awt.Component;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jfree.chart.ChartPanel;
@@ -155,6 +156,20 @@ public class BaseChart extends DynamicFieldObject implements Chart {
 	public JFreeChart getChart() {
 
 		return chartPanel.getChart();
+	}
+
+	@Override
+	public ArrayList<Double> setTimeDomain(ArrayList<Double> times) {
+
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ArrayList<Double> getTimeDomain() {
+
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

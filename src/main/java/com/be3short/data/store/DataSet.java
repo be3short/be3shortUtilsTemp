@@ -2,6 +2,7 @@
 package com.be3short.data.store;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,4 +37,7 @@ public interface DataSet {
 
 	public boolean exportToCSV(File output);
 
+	public ArrayList<Integer> setJumpDomain(DataSeries series, ArrayList<Integer> times);
+
+	public ArrayList<Integer> getJumpDomain(DataSeries series);
 }

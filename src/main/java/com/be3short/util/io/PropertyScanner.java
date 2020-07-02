@@ -15,8 +15,6 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import com.be3short.obj.modification.XMLParser;
-
 public class PropertyScanner {
 
 	public static CleanProperties getObjectProperties(Object obj, boolean include_class) {

@@ -266,7 +266,7 @@ public class FileSystemWorker {
 			writer.close(); // close the file
 			success = true;
 		} catch (Exception e) {
-
+			success = false;
 			e.printStackTrace();
 		}
 		return success;
