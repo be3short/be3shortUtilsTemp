@@ -108,7 +108,6 @@ public interface Chart extends Graphic {
 					true, true, true);
 		}
 		JFreeChart chart = chart_data.getChart();
-
 		ChartContentRenderer rend = new ChartContentRenderer(chart_data);
 		XYDataset dataset = buildXYSeriesCollection(chart_data.getData());
 		List<Double> domain = chart_data.getData().getDomain();
@@ -248,7 +247,7 @@ public interface Chart extends Graphic {
 					Double xValue = ObjectEvaluator.getDoubleValue(xValueObj);
 					Object yValueObj = chartSeries.getYValue(xValueObj);
 					if (FieldFinder.containsSuper(yValueObj, List.class)) {
-						System.out.println("list");
+
 						for (Object yListObj : ((List) yValueObj)) {
 							Double yValue = ObjectEvaluator.getDoubleValue(yListObj);
 							newSeries.add(xValue, yValue);
@@ -276,7 +275,6 @@ public interface Chart extends Graphic {
 		List<Double> xVals = new ArrayList<Double>();
 		for (Object xValueObj : ds.getXValues()) {
 			if (FieldFinder.containsSuper(xValueObj, List.class)) {
-				System.out.println("list");
 				for (Object xListObj : ((List) xValueObj)) {
 					Double xValue = ObjectEvaluator.getDoubleValue(xListObj);
 					xVals.add(xValue);

@@ -56,7 +56,7 @@ dependencies {
 
 }
 task(runApp, dependsOn: 'classes', type: JavaExec) {
-    main = 'com.be3short.jheq.core.scripting.ToolboxOperator'
+    main = 'com.be3short.jdt.wsgui.dev.ToolboxLauncher'
     classpath = sourceSets.main.runtimeClasspath
 }
 jar {

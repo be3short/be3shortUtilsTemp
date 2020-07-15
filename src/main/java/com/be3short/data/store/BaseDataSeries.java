@@ -70,7 +70,11 @@ public class BaseDataSeries extends DynamicFieldObject implements DataSeries {
 	@Override
 	public DataSeries setLabel(String label) {
 
-		this.label = label;
+		if (label != null) {
+			this.label = label;
+		} else {
+			this.label = "Series";
+		}
 		// System.out.println("setting label of " + this.toString() + " to " + label);
 		return this;
 	}

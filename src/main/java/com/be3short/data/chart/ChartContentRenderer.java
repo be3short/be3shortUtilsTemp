@@ -1230,7 +1230,8 @@ public class ChartContentRenderer extends AbstractXYItemRenderer
 			return;
 		}
 		try {
-			System.out.println("item= " + item + " x0=" + x0 + " x1=" + x1 + " y0=" + y0 + " y1=" + y1);
+			// System.out.println("item= " + item + " x0=" + x0 + " x1=" + x1 + " y0=" + y0
+			// + " y1=" + y1);
 			String extraDomainJump = checkExtraDomain(dataset).jumpOccurring(series, item, x0, y0, x1, y1);
 			// if ((x1 != x0) && (extraDomainJump)) {
 			// g2.setStroke(this.getSeriesStroke(series));

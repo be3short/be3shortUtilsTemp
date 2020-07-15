@@ -53,7 +53,6 @@ public class XYSeriesCollectionMultiDomain extends XYSeriesCollection {
 
 		super.addSeries(series);
 		if (jump_domain != null) {
-			System.out.println(jump_domain.size());
 			if (series.getItemCount() == jump_domain.size()) {
 				jumpDomains.put(series, jump_domain);
 			}

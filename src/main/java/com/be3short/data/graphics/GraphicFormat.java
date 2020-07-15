@@ -52,6 +52,7 @@ import com.be3short.io.format.FileFormatUtilities;
  * Intended Operator: User
  */
 public enum GraphicFormat implements FileFormatProperties<GraphicFormat> {
+
 	/**
 	 * Bit mapped image format.
 	 */

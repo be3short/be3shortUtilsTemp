@@ -49,62 +49,71 @@ public class FigureSaveListener implements KeyListener {
 		if (e.isControlDown()) {
 			if (KeyEvent.getKeyText(e.getKeyCode()).equals("S") || KeyEvent.getKeyText(e.getKeyCode()).equals("S")) {
 
-				Thread t = new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-
-						try {
-							UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-						} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-								| UnsupportedLookAndFeelException ex) {
-							ex.printStackTrace();
-						}
-						HashMap<String, GraphicFormat> formats = GraphicFormat.getFormatMap();
-
-						gs = new FigureFormatSelector<GraphicFormat>(formats);
-						JFileChooser fc = new JFileChooser();
-						JPanel cb = gs.getChoicePanel();
-						// cb.setPreferredSize(new Dimension(500, 200));
-
-						try {
-							JComboBox filterComboBox = (JComboBox) getField("filterComboBox", fc.getUI());
-							Container parent = filterComboBox.getParent();
-							parent.add(cb);
-						} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
-							ex.printStackTrace();
-						}
-
-						JComboBox filterComboBox;
-						try {
-							filterComboBox = (JComboBox) getField("filterComboBox", fc.getUI());
-							filterComboBox.getParent().remove(0);
-							JPanel bot = new JPanel(new BorderLayout());
-							bot.add(new JLabel("Select a graphic format:"), BorderLayout.CENTER);
-							bot.add(cb, BorderLayout.SOUTH);
-
-							filterComboBox.getParent().add(bot);
-							System.out.println(filterComboBox.getParent().getComponents().length);
-							filterComboBox.setVisible(false);
-
-						} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						fc.setDialogType(JFileChooser.SAVE_DIALOG);
-						File file = handleDialog(fc);
-						if (file != null) {
-							GraphicFormat format = gs.getSelected().get();
-							figure.exportToFile(file, format);
-						}
-					}
-
-				});
-				t.start();
+				performFileSave(null, null);
 
 			}
 			e.consume();
 		}
+	}
+
+	public void performFileSave(File output, GraphicFormat graphic_format) {
+
+		Thread t = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+
+				if (output != null && graphic_format != null) {
+					figure.exportToFile(output, graphic_format);
+				} else {
+					try {
+						UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+					} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+							| UnsupportedLookAndFeelException ex) {
+						ex.printStackTrace();
+					}
+					HashMap<String, GraphicFormat> formats = GraphicFormat.getFormatMap();
+
+					gs = new FigureFormatSelector<GraphicFormat>(formats);
+					JFileChooser fc = new JFileChooser();
+					JPanel cb = gs.getChoicePanel();
+					// cb.setPreferredSize(new Dimension(500, 200));
+
+					try {
+						JComboBox filterComboBox = (JComboBox) getField("filterComboBox", fc.getUI());
+						Container parent = filterComboBox.getParent();
+						parent.add(cb);
+					} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException ex) {
+						ex.printStackTrace();
+					}
+
+					JComboBox filterComboBox;
+					try {
+						filterComboBox = (JComboBox) getField("filterComboBox", fc.getUI());
+						filterComboBox.getParent().remove(0);
+						JPanel bot = new JPanel(new BorderLayout());
+						bot.add(new JLabel("Select a graphic format:"), BorderLayout.CENTER);
+						bot.add(cb, BorderLayout.SOUTH);
+
+						filterComboBox.getParent().add(bot);
+						System.out.println(filterComboBox.getParent().getComponents().length);
+						filterComboBox.setVisible(false);
+
+					} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					fc.setDialogType(JFileChooser.SAVE_DIALOG);
+					File file = handleDialog(fc);
+					if (file != null) {
+						GraphicFormat format = gs.getSelected().get();
+						figure.exportToFile(file, format);
+					}
+				}
+			}
+
+		});
+		t.start();
 	}
 
 	public File handleDialog(JFileChooser fc) {
